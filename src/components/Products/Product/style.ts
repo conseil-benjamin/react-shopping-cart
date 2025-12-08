@@ -19,7 +19,31 @@ export const BuyButton = styled.button`
 interface IImage {
   alt: string;
 }
-export const Image = styled.div<IImage>``;
+export const Image = styled.div`
+  width: 100%;
+  height: 270px;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  /* Le background-image sera injecté via le style inline dans le composant React */
+
+  ::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background: #eee;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  @media only screen and (min-width: ${({ theme: { breakpoints } }) =>
+  breakpoints.tablet}) {
+    height: 320px;
+  }
+`;
 
 interface IContainer {
   sku: number | string;
@@ -37,36 +61,9 @@ export const Container = styled.div<IContainer>`
     outline: 3px solid ${({ theme }) => theme.colors.secondary};
   }
 
-  ${Image} {
-    width: 100%;
-    height: 270px;
-    position: relative;
-    background-image: ${({ sku }) =>
-      `url(${require(`static/products/${sku}-1-product.webp`)})`};
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      background: #eee;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-
-    @media only screen and (min-width: ${({ theme: { breakpoints } }) =>
-        breakpoints.tablet}) {
-      height: 320px;
-    }
-  }
-
   &:hover {
     ${Image} {
-      background-image: ${({ sku }) =>
-        `url(${require(`static/products/${sku}-2-product.webp`)})`};
+      opacity: 0.8;
     }
 
     ${BuyButton} {

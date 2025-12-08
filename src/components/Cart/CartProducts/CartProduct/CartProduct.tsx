@@ -12,14 +12,10 @@ const CartProduct = ({ product }: IProps) => {
   const { removeProduct, increaseProductQuantity, decreaseProductQuantity } =
     useCart();
   const {
-    sku,
     title,
     price,
-    style,
-    currencyId,
-    currencyFormat,
-    availableSizes,
     quantity,
+    image
   } = product;
 
   const handleRemoveProduct = () => removeProduct(product);
@@ -33,18 +29,16 @@ const CartProduct = ({ product }: IProps) => {
         title="remove product from cart"
       />
       <S.Image
-        src={require(`static/products/${sku}-1-cart.webp`)}
+        src={image}
         alt={title}
       />
       <S.Details>
         <S.Title>{title}</S.Title>
         <S.Desc>
-          {`${availableSizes[0]} | ${style}`} <br />
-          Quantity: {quantity}
+          Quantity: <b>{quantity}</b>
         </S.Desc>
       </S.Details>
       <S.Price>
-        <p>{`${currencyFormat}  ${formatPrice(price, currencyId)}`}</p>
         <div>
           <S.ChangeQuantity
             onClick={handleDecreaseProductQuantity}
