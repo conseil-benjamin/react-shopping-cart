@@ -8,7 +8,7 @@ export const getProducts = async () => {
 
   if (isProduction) {
     response = await axios.get(
-      'https://react-shopping-cart-67954.firebaseio.com/products.json'
+      'https://fakestoreapi.com/products'
     );
   } else {
     response = require('static/json/products.json');

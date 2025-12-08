@@ -61,3 +61,14 @@ The MIT License (MIT). Please see License File for more information.
 <p align="center">
 <sub>A little project by <a href="http://www.jeffersonribeiro.com/">Jefferson Ribeiro</a></sub>
 </p>
+
+API :
+
+- Utilisation de fakestoreapi.com
+
+Pages :
+
+- Page détail d'un produit (/ product /: id) avec possibilité d'ajouter au panier.
+- Page commander (/ checkout) avec formulaire de commande et résumé du panier. (Avec autocomplétion des adresses via l'API Google Places)
+- Page admin
+- Filtre et barre de recherche sur la page d'accueil.
