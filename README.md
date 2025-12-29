@@ -68,7 +68,7 @@ API :
 
 Pages :
 
-- Page détail d'un produit (/ product /: id) avec possibilité d'ajouter au panier.
-- Page commander (/ checkout) avec formulaire de commande et résumé du panier. (Avec autocomplétion des adresses via l'API Google Places)
-- Page admin
-- Filtre et barre de recherche sur la page d'accueil.
+- Page détail d'un produit (/ product /: id) avec possibilité d'ajouter au panier. (Antoine)
+- Page commander (/ checkout) avec formulaire de commande et résumé du panier. (Avec autocomplétion des adresses via l'API Google Places) (Benjamin)
+- Page admin (Benjamin)
+- Filtre et barre de recherche sur la page d'accueil. (Antoine)
