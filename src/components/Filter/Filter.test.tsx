@@ -2,7 +2,8 @@ import { renderWithThemeProvider } from 'utils/test/test-utils';
 import { ProductsProvider } from 'contexts/products-context/';
 
 import Filter from '.';
-import { availableSizes } from './Filter';
+// On importe availableCategories au lieu de availableSizes
+import { availableCategories } from './Filter'; 
 
 describe('[components] - Filter', () => {
   const setup = () => {
@@ -18,8 +19,13 @@ describe('[components] - Filter', () => {
     expect(view).toMatchSnapshot();
   });
 
-  test('should render every filter size avaliable', () => {
+  // Mise à jour du test pour vérifier les catégories
+  test('should render every filter category available', () => {
     const { getByText } = setup();
-    expect(availableSizes.every((size) => getByText(size))).toBe(true);
+    
+    // On vérifie que chaque catégorie est bien présente dans le document
+    expect(
+      availableCategories.every((category) => getByText(category))
+    ).toBe(true);
   });
 });
