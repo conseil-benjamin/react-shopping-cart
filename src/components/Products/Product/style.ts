@@ -62,10 +62,6 @@ export const Container = styled.div<IContainer>`
   }
 
   &:hover {
-    ${Image} {
-      opacity: 0.8;
-    }
-
     ${BuyButton} {
       background-color: ${({ theme }) => theme.colors.secondary};
     }

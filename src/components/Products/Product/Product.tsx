@@ -4,9 +4,8 @@ import formatPrice from 'utils/formatPrice';
 import { IProduct } from 'models';
 
 import { useCart } from 'contexts/cart-context';
-
+import { Link } from 'react-router-dom';
 import * as S from './style';
-import { Image } from './style';
 
 interface IProps {
   product: IProduct;
@@ -34,8 +33,10 @@ const Product = ({ product }: IProps) => {
 
   return (
     <S.Container onKeyUp={handleAddProductWhenEnter} sku={product.id} tabIndex={1}>
-      <S.Image style={{ backgroundImage: `url(${image})` }} />
-      <S.Title>{title}</S.Title>
+      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <S.Image style={{ backgroundImage: `url(${product.image})` }} />
+        <S.Title>{product.title}</S.Title>
+      </Link>
       <S.Price>
         <S.Val>
           <b>{price} €</b>

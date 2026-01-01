@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import * as ReactDOMClient from 'react-dom/client';
-
+import { BrowserRouter } from 'react-router-dom';
 /* Theme */
 import { ThemeProvider } from 'commons/style/styled-components';
 import { theme } from 'commons/style/theme';
@@ -17,13 +17,15 @@ const container = ReactDOMClient.createRoot(root);
 
 container.render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <ProductsProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </ProductsProvider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <ProductsProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </ProductsProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   </StrictMode>
 );
