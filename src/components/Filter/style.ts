@@ -1,52 +1,46 @@
+// src/components/Filter/style.ts
 import styled from 'styled-components/macro';
-
 import CB from 'commons/Checkbox';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  padding: 15px;
+`;
 
 export const Checkbox = styled(CB)`
-  display: inline-block;
-  margin-bottom: 10px;
+  display: block; // On les affiche l'un au-dessus de l'autre pour plus de clarté
+  margin-bottom: 12px;
 
-  /* Customize the label (the container) */
   label {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     position: relative;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 14px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    width: 35px;
-    height: 35px;
-    font-size: 0.8em;
-    margin-bottom: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-    line-height: 35px;
-    text-align: center;
+    width: auto; // On enlève la largeur fixe de 35px
+    height: auto; // On enlève la hauteur fixe
+    padding: 8px 12px;
+    border-radius: 4px; // On remplace le cercle par des coins arrondis
+    background-color: #ececec;
+    transition: background-color 0.2s;
 
-    /* On mouse-over, add a border with the primary color */
-    &:hover input ~ .checkmark {
-      border: 1px solid ${({ theme }) => theme.colors.primary};
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.primary};
+      color: white;
     }
 
-    input:focus-visible ~ .checkmark {
-      box-sizing: border-box;
-      line-height: 30px;
-      border: 3px solid ${({ theme }) => theme.colors.secondary};
+    input:checked ~ .checkmark {
+      background-color: transparent; // On gère l'état via le label parent
+      color: inherit;
     }
 
-    /* When the checkbox is checked, add the primary color to background */
-    & input:checked ~ .checkmark {
+    /* Quand l'input est coché, on change le style du label entier */
+    &:has(input:checked) {
       background-color: ${({ theme }) => theme.colors.primary};
       color: #ececec;
-    }
-
-    /* Show the checkmark when checked */
-    & input:checked ~ .checkmark:after {
-      display: block;
     }
 
     input {
@@ -55,27 +49,55 @@ export const Checkbox = styled(CB)`
       cursor: pointer;
     }
 
-    /* Create a custom checkbox */
     .checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 35px;
-      height: 35px;
-      font-size: 0.8em;
-      border-radius: 50%;
-      box-sizing: border-box;
-      line-height: 35px;
-      text-align: center;
-      color: ${({ theme }) => theme.colors.primary};
-      background-color: #ececec;
-
-      border: 1px solid transparent;
+      /* On adapte la checkmark pour qu'elle contienne tout le texte */
+      position: relative; 
+      width: auto;
+      height: auto;
+      line-height: normal;
+      text-align: left;
+      color: inherit;
+      background-color: transparent;
+      border: none;
     }
   }
 `;
 
 export const Title = styled.h4`
-  margin-top: 2px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  font-weight: bold;
+`;
+
+export const RatingContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 20px;
+`;
+
+interface IRatingButton {
+  isActive?: boolean;
+}
+
+export const RatingButton = styled.button<IRatingButton>`
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s;
+  
+  /* Style dynamique selon si le bouton est actif ou non */
+  border: 1px solid ${({ isActive, theme }) => (isActive ? theme.colors.primary : '#ccc')};
+  background-color: ${({ isActive, theme }) => (isActive ? theme.colors.primary : '#f9f9f9')};
+  color: ${({ isActive }) => (isActive ? '#fff' : '#333')};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ isActive, theme }) => (isActive ? theme.colors.primary : '#ececec')};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.secondary};
+  }
 `;

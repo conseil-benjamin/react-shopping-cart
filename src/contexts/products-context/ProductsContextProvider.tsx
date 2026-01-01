@@ -9,6 +9,16 @@ export interface IProductsContext {
   setProducts(products: IProduct[]): void;
   filters: string[];
   setFilters(filters: string[]): void;
+  searchTerm: string;
+  setSearchTerm(term: string): void;
+  minPrice: number;
+  setMinPrice(price: number): void;
+  maxPrice: number;
+  setMaxPrice(price: number): void;
+  minRating: number;
+  setMinRating(rating: number): void;
+  sortBy: string;
+  setSortBy(sort: string): void;
 }
 
 const ProductsContext = createContext<IProductsContext | undefined>(undefined);
@@ -28,6 +38,11 @@ const ProductsProvider: FC = (props) => {
   const [isFetching, setIsFetching] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [filters, setFilters] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState('');
 
   const ProductContextValue: IProductsContext = {
     isFetching,
@@ -36,6 +51,16 @@ const ProductsProvider: FC = (props) => {
     setProducts,
     filters,
     setFilters,
+    searchTerm,
+    setSearchTerm,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    minRating,
+    setMinRating,
+    sortBy,
+    setSortBy,
   };
 
   return <ProductsContext.Provider value={ProductContextValue} {...props} />;

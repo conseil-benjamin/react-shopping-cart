@@ -6,6 +6,7 @@ import Recruiter from 'components/Recruiter';
 import Filter from 'components/Filter';
 import Products from 'components/Products';
 import Cart from 'components/Cart';
+import SearchBar from '../SearchBar';
 
 import { useProducts } from 'contexts/products-context';
 
@@ -30,7 +31,8 @@ function App() {
         </S.Side>
         <S.Main>
           <S.MainHeader>
-            <p>{products?.length} Product(s) found</p>
+            <SearchBar />
+            
           </S.MainHeader>
           <Products products={products} />
         </S.Main>
