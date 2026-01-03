@@ -50,6 +50,20 @@ export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  gap: 20px;
+  
+  ${FormGroup} {
+    flex: 1;
+    
+    &:last-child {
+      flex: 0 0 120px; /* Fixed width for postal code */
+    }
+  }
 `;
 
 export const Label = styled.label`
@@ -68,6 +82,8 @@ export const Input = styled.input`
   color: white;
   font-size: 16px;
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
   
   &:focus {
     outline: none;
@@ -78,6 +94,12 @@ export const Input = styled.input`
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:read-only {
+    opacity: 0.7;
+    cursor: default;
+    background: rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -125,6 +147,7 @@ export const SearchResults = styled.ul`
   width: 100%;
   z-index: 100;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  top: 100%;
 `;
 
 export const SearchResultItem = styled.li`
@@ -146,6 +169,7 @@ export const SearchResultItem = styled.li`
 
 export const RelativeWrapper = styled.div`
   position: relative;
+  width: 100%;
 `;
 
 export const TotalRow = styled.div`

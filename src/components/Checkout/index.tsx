@@ -12,20 +12,39 @@ interface City {
     codesPostaux: string[];
 }
 
+interface AddressFeature {
+    properties: {
+        label: string;
+        postcode: string;
+        city: string;
+    };
+}
+
 const Checkout = () => {
     const { products, total, clearCart } = useCart();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+
+    // City Autocomplete
     const [citySearch, setCitySearch] = useState('');
     const [citiesResult, setCitiesResult] = useState<City[]>([]);
     const [citySelected, setCitySelected] = useState<Partial<City>>({});
 
+    // Postal Code
+    const [postalCode, setPostalCode] = useState('');
+
+    // Address Autocomplete
+    const [addressSearch, setAddressSearch] = useState('');
+    const [addressResult, setAddressResult] = useState<AddressFeature[]>([]);
+    const [addressSelected, setAddressSelected] = useState(false);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
+    // Fetch Cities
     const fetchCities = async () => {
-        if (!citySearch) {
+        if (!citySearch || citySelected.nom === citySearch) {
             setCitiesResult([]);
             return;
         }
@@ -39,9 +58,6 @@ const Checkout = () => {
                 }
             });
             setCitiesResult(response.data);
-            if (citySearch && citySearch !== citySelected.nom) {
-                setCitySelected({});
-            }
         } catch (error) {
             console.error('Error fetching cities:', error);
         }
@@ -58,7 +74,53 @@ const Checkout = () => {
     const handleSelectCity = (city: City) => {
         setCitySelected(city);
         setCitySearch(city.nom);
+        setPostalCode(city.codesPostaux[0] || '');
         setCitiesResult([]);
+    };
+
+    // Fetch Addresses
+    const fetchAddresses = async () => {
+        if (!addressSearch || addressSelected) {
+            setAddressResult([]);
+            return;
+        }
+        try {
+            const response = await axios.get('https://api-adresse.data.gouv.fr/search/', {
+                params: {
+                    q: addressSearch,
+                    limit: 5
+                }
+            });
+            setAddressResult(response.data.features);
+        } catch (error) {
+            console.error('Error fetching addresses:', error);
+        }
+    };
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            fetchAddresses();
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [addressSearch]);
+
+    const handleSelectAddress = (feature: AddressFeature) => {
+        setAddressSearch(feature.properties.label);
+        setAddressSelected(true);
+        setAddressResult([]);
+
+        // Optionally auto-fill city and postal code if not already set
+        if (!citySelected.nom) {
+            setCitySearch(feature.properties.city);
+            setPostalCode(feature.properties.postcode);
+            // We might want to set citySelected properly here, but for now just filling the inputs
+        }
+    };
+
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAddressSearch(e.target.value);
+        setAddressSelected(false);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -72,7 +134,7 @@ const Checkout = () => {
         setIsSubmitting(true);
 
         const payload = {
-            userId: 1, 
+            userId: 1,
             date: new Date().toISOString().split('T')[0],
             products: products.map(p => ({ productId: p.id, quantity: p.quantity }))
         };
@@ -122,30 +184,72 @@ const Checkout = () => {
                             required
                         />
                     </S.FormGroup>
+
+                    <S.Row>
+                        <S.FormGroup>
+                            <S.Label>City</S.Label>
+                            <S.RelativeWrapper>
+                                <S.Input
+                                    type="text"
+                                    value={citySearch}
+                                    onChange={(e) => {
+                                        setCitySearch(e.target.value);
+                                        setCitySelected({}); // Reset selection on manual edit
+                                    }}
+                                    placeholder="Search for a city..."
+                                    required
+                                />
+                                {citiesResult.length > 0 && (
+                                    <S.SearchResults>
+                                        {citiesResult.map((city) => (
+                                            <S.SearchResultItem
+                                                key={city.code}
+                                                onClick={() => handleSelectCity(city)}
+                                            >
+                                                {city.nom} ({city.codesPostaux[0]})
+                                            </S.SearchResultItem>
+                                        ))}
+                                    </S.SearchResults>
+                                )}
+                            </S.RelativeWrapper>
+                        </S.FormGroup>
+
+                        <S.FormGroup>
+                            <S.Label>Postal Code</S.Label>
+                            <S.Input
+                                type="text"
+                                value={postalCode}
+                                readOnly
+                                placeholder="Auto-filled"
+                            />
+                        </S.FormGroup>
+                    </S.Row>
+
                     <S.FormGroup>
-                        <S.Label>City</S.Label>
+                        <S.Label>Address</S.Label>
                         <S.RelativeWrapper>
                             <S.Input
                                 type="text"
-                                value={citySearch}
-                                onChange={(e) => setCitySearch(e.target.value)}
-                                placeholder="Search for a city..."
+                                value={addressSearch}
+                                onChange={handleAddressChange}
+                                placeholder="Start typing your address..."
                                 required
                             />
-                            {citiesResult.length > 0 && (
+                            {addressResult.length > 0 && (
                                 <S.SearchResults>
-                                    {citiesResult.map((city) => (
+                                    {addressResult.map((feature, index) => (
                                         <S.SearchResultItem
-                                            key={city.code}
-                                            onClick={() => handleSelectCity(city)}
+                                            key={index}
+                                            onClick={() => handleSelectAddress(feature)}
                                         >
-                                            {city.nom} ({city.codesPostaux[0]})
+                                            {feature.properties.label}
                                         </S.SearchResultItem>
                                     ))}
                                 </S.SearchResults>
                             )}
                         </S.RelativeWrapper>
                     </S.FormGroup>
+
                 </form>
             </S.FormColumn>
 
@@ -158,8 +262,8 @@ const Checkout = () => {
                     <span>Total:</span>
                     <span>{total.currencyFormat} {formatPrice(total.totalPrice, total.currencyId)}</span>
                 </S.TotalRow>
-                <S.Button onClick={handleSubmit} style={{ marginTop: '20px' }}>
-                    Place Order
+                <S.Button onClick={handleSubmit} style={{ marginTop: '20px' }} disabled={isSubmitting}>
+                    {isSubmitting ? 'Placing Order...' : 'Place Order'}
                 </S.Button>
             </S.SummaryColumn>
         </S.Container>
