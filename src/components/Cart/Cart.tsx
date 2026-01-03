@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import formatPrice from 'utils/formatPrice';
 import CartProducts from './CartProducts';
 
@@ -8,14 +9,12 @@ import * as S from './style';
 const Cart = () => {
   const { products, total, isOpen, openCart, closeCart } = useCart();
 
+  const navigate = useNavigate();
+
   const handleCheckout = () => {
     if (total.productQuantity) {
-      alert(
-        `Checkout - Subtotal: ${total.currencyFormat} ${formatPrice(
-          total.totalPrice,
-          total.currencyId
-        )}`
-      );
+      closeCart();
+      navigate('/checkout');
     } else {
       alert('Add some product in the cart!');
     }
@@ -59,12 +58,11 @@ const Cart = () => {
               <S.SubPriceInstallment>
                 {total.installments ? (
                   <span>
-                    {`OR UP TO ${total.installments} x ${
-                      total.currencyFormat
-                    } ${formatPrice(
-                      total.totalPrice / total.installments,
-                      total.currencyId
-                    )}`}
+                    {`OR UP TO ${total.installments} x ${total.currencyFormat
+                      } ${formatPrice(
+                        total.totalPrice / total.installments,
+                        total.currencyId
+                      )}`}
                   </span>
                 ) : null}
               </S.SubPriceInstallment>

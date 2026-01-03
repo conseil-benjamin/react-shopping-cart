@@ -1,44 +1,28 @@
-import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Loader from 'components/Loader';
-import { GithubCorner, GithubStarButton } from 'components/Github';
-import Recruiter from 'components/Recruiter';
-import Filter from 'components/Filter';
-import Products from 'components/Products';
-import Cart from 'components/Cart';
-import SearchBar from '../SearchBar';
+import Home from 'components/Home';
+import Admin from 'components/Admin';
+import Checkout from 'components/Checkout';
 
 import { useProducts } from 'contexts/products-context';
 
 import * as S from './style';
 
 function App() {
-  const { isFetching, products, fetchProducts } = useProducts();
-
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  const { isFetching } = useProducts();
 
   return (
-    <S.Container>
-      {isFetching && <Loader />}
-      <GithubCorner />
-      <Recruiter />
-      <S.TwoColumnGrid>
-        <S.Side>
-          <Filter />
-          <GithubStarButton />
-        </S.Side>
-        <S.Main>
-          <S.MainHeader>
-            <SearchBar />
-            
-          </S.MainHeader>
-          <Products products={products} />
-        </S.Main>
-      </S.TwoColumnGrid>
-      <Cart />
-    </S.Container>
+    <BrowserRouter>
+      <S.Container>
+        {isFetching && <Loader />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Routes>
+      </S.Container>
+    </BrowserRouter>
   );
 }
 
