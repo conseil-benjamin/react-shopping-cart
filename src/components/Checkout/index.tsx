@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useCart } from 'contexts/cart-context';
 import CartProduct from 'components/Cart/CartProducts/CartProduct';
 import formatPrice from 'utils/formatPrice';
+import { saveOrder } from 'services/orderStorage';
+import { v4 as uuidv4 } from 'uuid';
 import * as S from './style';
 
 interface City {
@@ -114,7 +116,6 @@ const Checkout = () => {
         if (!citySelected.nom) {
             setCitySearch(feature.properties.city);
             setPostalCode(feature.properties.postcode);
-            // We might want to set citySelected properly here, but for now just filling the inputs
         }
     };
 
@@ -133,14 +134,23 @@ const Checkout = () => {
 
         setIsSubmitting(true);
 
-        const payload = {
-            userId: 1,
-            date: new Date().toISOString().split('T')[0],
-            products: products.map(p => ({ productId: p.id, quantity: p.quantity }))
+        const order = {
+            id: uuidv4(),
+            customer: {
+                firstName,
+                lastName,
+                email,
+                address: addressSearch,
+                city: citySearch,
+                postalCode
+            },
+            products,
+            total: total.totalPrice,
+            date: new Date().toISOString()
         };
 
         try {
-            await axios.post('https://fakestoreapi.com/carts', payload);
+            saveOrder(order);
             alert(`Order placed successfully for ${firstName} ${lastName}!`);
             clearCart();
             navigate('/');
@@ -194,7 +204,7 @@ const Checkout = () => {
                                     value={citySearch}
                                     onChange={(e) => {
                                         setCitySearch(e.target.value);
-                                        setCitySelected({}); // Reset selection on manual edit
+                                        setCitySelected({});
                                     }}
                                     placeholder="Search for a city..."
                                     required

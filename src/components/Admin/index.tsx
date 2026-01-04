@@ -1,46 +1,39 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Loader from 'components/Loader';
+import { getOrders, deleteOrder, Order } from 'services/orderStorage';
+import formatPrice from 'utils/formatPrice';
 import * as S from './style';
 
-interface Cart {
-    id: number;
-    userId: number;
-    date: string;
-    products: { productId: number; quantity: number }[];
-}
-
 const Admin = () => {
-    const [carts, setCarts] = useState<Cart[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        fetchCarts();
+        fetchOrders();
     }, []);
 
-    const fetchCarts = async () => {
+    const fetchOrders = () => {
         setIsLoading(true);
         try {
-            const response = await axios.get('https://fakestoreapi.com/carts');
-            setCarts(response.data);
+            const localOrders = getOrders();
+            setOrders(localOrders);
         } catch (error) {
-            console.error('Error fetching carts:', error);
+            console.error('Error fetching orders:', error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleDeleteCart = async (id: number) => {
-        if (!window.confirm('Are you sure you want to delete this cart?')) return;
+    const handleDeleteOrder = (id: string) => {
+        if (!window.confirm('Are you sure you want to delete this order?')) return;
 
         try {
-            await axios.delete(`https://fakestoreapi.com/carts/${id}`);
-            // FakeStoreAPI doesn't actually delete, so we filter locally
-            setCarts((prevCarts) => prevCarts.filter((cart) => cart.id !== id));
-            alert(`Cart ${id} deleted successfully`);
+            deleteOrder(id);
+            setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+            alert(`Order deleted successfully`);
         } catch (error) {
-            console.error('Error deleting cart:', error);
-            alert('Failed to delete cart');
+            console.error('Error deleting order:', error);
+            alert('Failed to delete order');
         }
     };
 
@@ -54,27 +47,37 @@ const Admin = () => {
                     <S.Table>
                         <thead>
                             <tr>
-                                <S.Th>ID</S.Th>
-                                <S.Th>User ID</S.Th>
                                 <S.Th>Date</S.Th>
+                                <S.Th>Customer</S.Th>
+                                <S.Th>Email</S.Th>
+                                <S.Th>Location</S.Th>
                                 <S.Th>Products</S.Th>
+                                <S.Th>Total</S.Th>
                                 <S.Th>Actions</S.Th>
                             </tr>
                         </thead>
                         <tbody>
-                            {carts.map((cart) => (
-                                <S.Tr key={cart.id}>
-                                    <S.Td>{cart.id}</S.Td>
-                                    <S.Td>{cart.userId}</S.Td>
-                                    <S.Td>{new Date(cart.date).toLocaleDateString()}</S.Td>
-                                    <S.Td>{cart.products.length} items</S.Td>
-                                    <S.Td>
-                                        <S.DeleteButton onClick={() => handleDeleteCart(cart.id)}>
-                                            Delete
-                                        </S.DeleteButton>
-                                    </S.Td>
-                                </S.Tr>
-                            ))}
+                            {orders.length === 0 ? (
+                                <tr>
+                                    <S.Td colSpan={7} style={{ textAlign: 'center' }}>No orders found.</S.Td>
+                                </tr>
+                            ) : (
+                                orders.map((order) => (
+                                    <S.Tr key={order.id}>
+                                        <S.Td>{new Date(order.date).toLocaleDateString()} {new Date(order.date).toLocaleTimeString()}</S.Td>
+                                        <S.Td>{order.customer.firstName} {order.customer.lastName}</S.Td>
+                                        <S.Td>{order.customer.email}</S.Td>
+                                        <S.Td>{order.customer.city} ({order.customer.postalCode})</S.Td>
+                                        <S.Td>{order.products.reduce((acc, p) => acc + p.quantity, 0)} items</S.Td>
+                                        <S.Td>${formatPrice(order.total, 'USD')}</S.Td>
+                                        <S.Td>
+                                            <S.DeleteButton onClick={() => handleDeleteOrder(order.id)}>
+                                                Delete
+                                            </S.DeleteButton>
+                                        </S.Td>
+                                    </S.Tr>
+                                ))
+                            )}
                         </tbody>
                     </S.Table>
                 )}
