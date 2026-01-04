@@ -6,6 +6,8 @@ export interface StyleClosetTheme {
 const colors = {
   primary: '#1b1a20',
   secondary: '#eabf00',
+  white: '#ffffff',
+  black: '#000000',
 };
 
 const breakpoints = {
