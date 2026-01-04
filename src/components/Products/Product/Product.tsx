@@ -39,7 +39,8 @@ const Product = ({ product }: IProps) => {
       </Link>
       <S.Price>
         <S.Val>
-          <b>{price} €</b>
+           <b> $ {formatPrice(price, 'USD')}</b>
+          
         </S.Val>
       </S.Price>
       <S.BuyButton onClick={handleAddProduct} tabIndex={-1}>

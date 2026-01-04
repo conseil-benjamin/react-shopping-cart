@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from 'contexts/products-context';
 import { useCart } from 'contexts/cart-context';
 import formatPrice from 'utils/formatPrice';
-import Products from 'components/Products'; // Import pour la liste du bas
+import Products from 'components/Products';
 
 import { ProductDetailsWrapper } from './ProductDetails.styled';
 import star from '../../static/star.png';
@@ -36,9 +36,9 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
   if (!product) {
     return (
       <ProductDetailsWrapper>
-        <p>Produit introuvable...</p>
-        <button className="back-button" onClick={() => navigate('/')}>
-          Retour à la boutique
+        <p>Product not found...</p>
+        <button className="back-button" onClick={() => navigate('/') }>
+          Back to shop
         </button>
       </ProductDetailsWrapper>
     );
@@ -51,9 +51,8 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
 
   return (
     <ProductDetailsWrapper>
-      {/* Bouton de retour (utilisera les nouveaux styles) */}
-      <button className="back-button" onClick={() => navigate('/')}>
-        Boutique
+      <button className="back-button" onClick={() => navigate('/') }>
+        Back to shop
       </button>
 
       <div className="product-container">
@@ -68,27 +67,26 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
           <div className="rating">
             <span>{product.rating.rate}</span>
             <img src={star} alt="star" style={{ width: '20px', height: '20px' }} />
-            <small>({product.rating.count} avis)</small>
+            <small>({product.rating.count} reviews)</small>
           </div>
 
           <p className="description">{product.description}</p>
 
           <div className="price-container">
             <span className="price">
-              {formatPrice(product.price, 'USD')}
+              $ {formatPrice(product.price, 'USD')}
             </span>
           </div>
 
           <button className="add-button" onClick={handleAddToCart}>
-            AJOUTER AU PANIER
+            ADD TO CART
           </button>
         </div>
       </div>
 
-      {/* Section Produits suggérés en bas */}
       {relatedProducts.length > 0 && (
         <div className="related-products">
-          <h3>Vous aimerez aussi</h3>
+          <h3>You may also like</h3>
           <Products products={relatedProducts} />
         </div>
       )}

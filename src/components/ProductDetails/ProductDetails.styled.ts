@@ -58,7 +58,6 @@ export const ProductDetailsWrapper = styled.div`
       font-size: 28px;
       font-weight: bold;
       color: #1b1a20;
-      &::before { content: '$'; font-size: 18px; margin-right: 2px; }
     }
 
     .add-button {
