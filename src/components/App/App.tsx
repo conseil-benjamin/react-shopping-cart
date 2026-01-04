@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-
+import { Routes, Route } from 'react-router-dom';
+import ProductDetails from 'components/ProductDetails';
 import Loader from 'components/Loader';
 import { GithubCorner, GithubStarButton } from 'components/Github';
 import Recruiter from 'components/Recruiter';
 import Filter from 'components/Filter';
 import Products from 'components/Products';
 import Cart from 'components/Cart';
-import SearchBar from '../SearchBar';
+import SearchBar from 'components/SearchBar';
 
 import { useProducts } from 'contexts/products-context';
-
 import * as S from './style';
 
 function App() {
@@ -24,19 +24,31 @@ function App() {
       {isFetching && <Loader />}
       <GithubCorner />
       <Recruiter />
-      <S.TwoColumnGrid>
-        <S.Side>
-          <Filter />
-          <GithubStarButton />
-        </S.Side>
-        <S.Main>
-          <S.MainHeader>
-            <SearchBar />
+      
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <S.TwoColumnGrid>
+              <S.Side>
+                <Filter />
+                <GithubStarButton />
+              </S.Side>
+              <S.Main>
+                <S.MainHeader>
+                  <SearchBar />
             
-          </S.MainHeader>
-          <Products products={products} />
-        </S.Main>
-      </S.TwoColumnGrid>
+                </S.MainHeader>
+                <Products products={products} />
+              </S.Main>
+            </S.TwoColumnGrid>
+          } 
+        />
+
+        {/* Route pour le détail du produit */}
+        <Route path="/product/:id" element={<ProductDetails />} />
+      </Routes>
+
       <Cart />
     </S.Container>
   );

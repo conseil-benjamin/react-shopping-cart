@@ -1,5 +1,6 @@
 import formatPrice from 'utils/formatPrice';
 import { ICartProduct } from 'models';
+import { Link } from 'react-router-dom';
 
 import { useCart } from 'contexts/cart-context';
 
@@ -33,7 +34,9 @@ const CartProduct = ({ product }: IProps) => {
         alt={title}
       />
       <S.Details>
-        <S.Title>{title}</S.Title>
+        <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+               <S.Title>{title}</S.Title>
+        </Link>
         <S.Desc>
           Quantity: <b>{quantity}</b>
         </S.Desc>
