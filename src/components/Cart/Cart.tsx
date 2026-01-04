@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import formatPrice from 'utils/formatPrice';
 import CartProducts from './CartProducts';
-
+import Swal from 'sweetalert2';
 import { useCart } from 'contexts/cart-context';
 
 import * as S from './style';
@@ -16,7 +16,12 @@ const Cart = () => {
       closeCart();
       navigate('/checkout');
     } else {
-      alert('Add some product in the cart!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cart is empty',
+        text: 'Please add some products to your cart.',
+        confirmButtonColor: '#eabf00'
+      });
     }
   };
 

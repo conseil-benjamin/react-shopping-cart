@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Loader from 'components/Loader';
 import { getOrders, deleteOrder, Order } from 'services/orderStorage';
 import formatPrice from 'utils/formatPrice';
+import Swal from 'sweetalert2';
 import * as S from './style';
 
 const Admin = () => {
@@ -24,16 +25,34 @@ const Admin = () => {
         }
     };
 
-    const handleDeleteOrder = (id: string) => {
-        if (!window.confirm('Are you sure you want to delete this order?')) return;
+    const handleDeleteOrder = async (id: string) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#eabf00',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
 
-        try {
-            deleteOrder(id);
-            setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
-            alert(`Order deleted successfully`);
-        } catch (error) {
-            console.error('Error deleting order:', error);
-            alert('Failed to delete order');
+        if (result.isConfirmed) {
+            try {
+                deleteOrder(id);
+                setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+                Swal.fire(
+                    'Deleted!',
+                    'Order has been deleted.',
+                    'success'
+                );
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                Swal.fire(
+                    'Error!',
+                    'Failed to delete order.',
+                    'error'
+                );
+            }
         }
     };
 

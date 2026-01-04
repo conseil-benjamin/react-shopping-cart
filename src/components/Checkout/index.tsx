@@ -6,6 +6,7 @@ import CartProduct from 'components/Cart/CartProducts/CartProduct';
 import formatPrice from 'utils/formatPrice';
 import { saveOrder } from 'services/orderStorage';
 import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 import * as S from './style';
 
 interface City {
@@ -112,7 +113,6 @@ const Checkout = () => {
         setAddressSelected(true);
         setAddressResult([]);
 
-        // Optionally auto-fill city and postal code if not already set
         if (!citySelected.nom) {
             setCitySearch(feature.properties.city);
             setPostalCode(feature.properties.postcode);
@@ -128,7 +128,12 @@ const Checkout = () => {
         e.preventDefault();
 
         if (products.length === 0) {
-            alert('Your cart is empty!');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cart is empty',
+                text: 'Please add some products to your cart.',
+                confirmButtonColor: '#eabf00'
+            });
             return;
         }
 
@@ -151,12 +156,28 @@ const Checkout = () => {
 
         try {
             saveOrder(order);
-            alert(`Order placed successfully for ${firstName} ${lastName}!`);
+
+            await Swal.fire({
+                icon: 'success',
+                title: 'Order placed successfully!',
+                text: `Thank you, ${firstName} ${lastName}. Redirecting to home...`,
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+
             clearCart();
             navigate('/');
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('Failed to place order. Please try again.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to place order. Please try again.',
+                confirmButtonColor: '#eabf00'
+            });
         } finally {
             setIsSubmitting(false);
         }

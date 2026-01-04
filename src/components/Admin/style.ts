@@ -5,26 +5,24 @@ export const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   min-height: 80vh;
-  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Title = styled.h1`
   font-size: 2.5em;
   margin-bottom: 30px;
   text-align: center;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.primary};
   font-weight: 300;
   letter-spacing: 1px;
   text-transform: uppercase;
 `;
 
 export const Content = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  background: #ffffff;
   border-radius: 16px;
   padding: 30px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   overflow-x: auto;
 `;
 
@@ -32,7 +30,7 @@ export const Table = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 10px;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Th = styled.th`
@@ -46,12 +44,13 @@ export const Th = styled.th`
 `;
 
 export const Tr = styled.tr`
-  background: rgba(255, 255, 255, 0.03);
-  transition: transform 0.2s, background 0.2s;
+  background: #f9f9f9;
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
 
   &:hover {
-    transform: scale(1.01);
-    background: rgba(255, 255, 255, 0.07);
+    transform: scale(1.005);
+    background: #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
   }
 `;
 
