@@ -10,6 +10,13 @@ import star from '../../static/star.png';
 
 interface ProductDetailsProps {}
 
+/**
+ * ProductDetails component
+ * - Displays full information for a single product (image, title, rating,
+ *   description, price) and allows adding the product to the cart.
+ * - Also computes and shows a short list of related products (same category).
+ * - Uses `useProducts` to read products list and `useCart` to add/open cart.
+ */
 const ProductDetails: FC<ProductDetailsProps> = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -17,10 +24,10 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
   const { products } = useProducts();
   const { addProduct, openCart } = useCart();
 
-  // 1. Trouver le produit actuel
+  // 1. Find the current product by id from the products list
   const product = products.find((p) => p.id === Number(id));
 
-  // 2. Logique pour les produits suggérés (même catégorie, max 4)
+  // 2. Logic for suggested products (same category, max 4)
   const relatedProducts = useMemo(() => {
     if (!product) return [];
     return products
@@ -28,7 +35,7 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
       .slice(0, 4);
   }, [product, products]);
 
-  // 3. Remonter en haut de page quand on change de produit
+  // 3. Scroll to top when the product id changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -49,6 +56,11 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
     openCart();
   };
 
+  // Handler invoked when the "Add to cart" button is clicked.
+  // - Adds the current product to the cart with an initial quantity of 1.
+  // - Opens the cart drawer/modal so the user sees the updated contents.
+
+
   return (
     <ProductDetailsWrapper>
       <button className="back-button" onClick={() => navigate('/') }>
@@ -56,22 +68,27 @@ const ProductDetails: FC<ProductDetailsProps> = () => {
       </button>
 
       <div className="product-container">
+        {/* Image section: show the main product image */}
         <div className="image-section">
           <img src={product.image} alt={product.title} />
         </div>
 
+        {/* Info section: category, title, rating, description and price */}
         <div className="info-section">
           <span className="category">{product.category}</span>
           <h1 className="title">{product.title}</h1>
           
+          {/* Rating display: numeric rate, star icon and total reviews */}
           <div className="rating">
             <span>{product.rating.rate}</span>
             <img src={star} alt="star" style={{ width: '20px', height: '20px' }} />
             <small>({product.rating.count} reviews)</small>
           </div>
 
+          {/* Product description */}
           <p className="description">{product.description}</p>
 
+          {/* Price and add-to-cart button */}
           <div className="price-container">
             <span className="price">
               $ {formatPrice(product.price, 'USD')}
