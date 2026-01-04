@@ -6,7 +6,6 @@ import Admin from 'components/Admin';
 import Checkout from 'components/Checkout';
 
 import { useProducts } from 'contexts/products-context';
-
 import * as S from './style';
 
 function App() {

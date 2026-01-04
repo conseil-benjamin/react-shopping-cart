@@ -1,6 +1,15 @@
 import { useProducts } from 'contexts/products-context';
 import * as S from './style';
 
+/**
+ * Filter component
+ * - Displays category checkboxes, sorting options, price range inputs and
+ *   minimum rating buttons.
+ * - Uses `useProducts` context to read current filter state and invoke
+ *   handlers (filterProducts, handlePriceChange, handleRatingChange, ...).
+ * - Toggling a category updates the selected filters via `filterProducts`.
+ */
+
 export const availableCategories = [
   "electronics",
   "jewelery",
@@ -33,9 +42,14 @@ const Filter = () => {
     filterProducts(newFilters);
   };
 
+  // Toggle a category checkbox.
+  // - We store selected categories in a Set to ensure uniqueness.
+  // - After toggling we call `filterProducts` with the new selection array.
+
   return (
     <S.Container>
-      <S.Title>Catégories:</S.Title>
+      <S.Title>Categories:</S.Title>
+      {/* Category checkboxes: toggle a category to include/exclude it from results */}
       {availableCategories.map(cat => (
         <S.Checkbox 
           label={cat} 
@@ -44,18 +58,19 @@ const Filter = () => {
         />
       ))}
 
-      <S.Title>Trier par:</S.Title>
+      <S.Title>Sort by:</S.Title>
+      {/* Sorting select: triggers `handleSortChange` with the selected option */}
       <select 
         onChange={(e) => handleSortChange(e.target.value)}
         style={{ width: '100%', padding: '8px', marginBottom: '20px', borderRadius: '4px' }}
       >
-        <option value="">Sélectionner</option>
-        <option value="lowestprice">Prix croissant</option>
-        <option value="highestprice">Prix décroissant</option>
-        <option value="toprated">Meilleures notes</option>
+        <option value="">Select</option>
+        <option value="lowestprice">Price: Low to High</option>
+        <option value="highestprice">Price: High to Low</option>
+        <option value="toprated">Top Rated</option>
       </select>
-
-      <S.Title>Tranche de prix :</S.Title>
+      <S.Title>Price range:</S.Title>
+      {/* Price range inputs: call `handlePriceChange(min, max)` on change */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
         <input 
           type="number" 
@@ -64,7 +79,7 @@ const Filter = () => {
           style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           onChange={(e) => handlePriceChange(Number(e.target.value), maxPrice)} 
         />
-        <span style={{ alignSelf: 'center' }}>à</span>
+        <span style={{ alignSelf: 'center' }}>to</span>
         <input 
           type="number" 
           placeholder="Max"
@@ -74,7 +89,8 @@ const Filter = () => {
         />
       </div>
 
-      <S.Title>Note minimale :</S.Title>
+      <S.Title>Minimum rating:</S.Title>
+      {/* Rating buttons: select a minimum rating; pressing "All" clears the filter */}
       <S.RatingContainer>
         {[1, 2, 3, 4].map((star) => (
           <S.RatingButton
@@ -88,7 +104,7 @@ const Filter = () => {
         
         {minRating > 0 && (
           <S.RatingButton onClick={() => handleRatingChange(0)}>
-            Toutes
+            All
           </S.RatingButton>
         )}
       </S.RatingContainer>
