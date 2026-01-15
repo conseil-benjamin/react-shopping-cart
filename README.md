@@ -1,3 +1,25 @@
+# 🛒 E-Commerce Platform - React & TypeScript
+
+**Projet Master 1 Informatique : Parcours Ingénierie Logicielle (IL)** **ISTIC - Université de Rennes**
+
+---
+
+### 👥 Auteurs
+
+- **Benjamin CONSEIL** (n° 23100903)
+- **Antoine DEBRAY** (n° 26100468)
+- **Formation :** M1 IL Alternance
+
+---
+
+## 📝 Contexte du Projet
+
+Dans le cadre de l'UE Développement Web, ce projet suit l'**Option 3** : nous sommes partis d'une base existante (_React Shopping Cart_) pour y injecter de nouvelles fonctionnalités majeures.
+
+**Contrainte majeure :** Le projet se concentre exclusivement sur le **Front-end**. Nous exploitons des services tiers et des API publiques pour simuler un écosystème complet sans modification de backend.
+
+---
+
 ## 🛍️ Simple ecommerce cart application [![CircleCI](https://circleci.com/gh/jeffersonRibeiro/react-shopping-cart.svg?style=svg)](https://circleci.com/gh/jeffersonRibeiro/react-shopping-cart)
 
 <p align="center">
@@ -50,17 +72,31 @@ npm run test
 
 ```
 
-### Copyright and license
+# Antoine DEBRAY
 
-The MIT License (MIT). Please see License File for more information.
+### 1. Optimisation de la Page d'Accueil (Recherche & Filtrage)
 
-<br/>
-<br/>
+L'expérience utilisateur sur la page principale a été enrichie par l'ajout d'outils de navigation et de tri performants :
 
-<p align="center"><img src="http://www.jeffersonribeiro.com/assets/img/apple-icon-180x180.png" width="35" height="35"/></p>
-<p align="center">
-<sub>A little project by <a href="http://www.jeffersonribeiro.com/">Jefferson Ribeiro</a></sub>
-</p>
+- **Barre de Recherche** : Intégration d'un composant `SearchBar` permettant un filtrage dynamique des produits par leur titre.
+- **Système de Filtres Avancés** : Création d'un composant `Filter` regroupant plusieurs critères :
+  - **Filtrage par catégorie** : Permet de cibler précisément les types de produits souhaités.
+  - **Tri dynamique** : Options pour trier par prix (croissant/décroissant) ou par les articles les mieux notés.
+  - **Plage de prix** : Champs de saisie Min/Max pour adapter les résultats au budget de l'utilisateur.
+  - **Note minimale** : Filtrage par évaluation via une interface de boutons interactifs.
+
+### 2. Page de Détails du Produit
+
+Mise en œuvre d'une vue détaillée complète accessible via un routage dynamique (`/product/:id`) :
+
+- **Informations Complètes** : Affichage de l'image, de la description, de la note moyenne et du prix formaté de l'article sélectionné.
+- **Algorithme de Suggestion** : Une section "Vous aimerez aussi" affiche automatiquement jusqu'à 4 produits de la même catégorie pour encourager la découverte.
+- **Navigation Intuitive** : Ajout d'un bouton de retour à la boutique et gestion du défilement automatique vers le haut (Scroll to top) lors du changement de produit.
+
+### 3. Architecture Technique
+
+- **Routage** : Utilisation de `BrowserRouter` de `react-router-dom` pour une navigation fluide sans rechargement de page.
+- **Gestion d'État (Context API)** : Centralisation des données de produits et des filtres via `ProductsProvider` pour assurer la cohérence entre les différents composants (Recherche, Filtres et Grille de produits).
 
 API :
 
