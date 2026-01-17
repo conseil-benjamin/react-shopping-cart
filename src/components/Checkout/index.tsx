@@ -29,15 +29,15 @@ const Checkout = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
 
-    // City Autocomplete
+    // Autocomplétion ville
     const [citySearch, setCitySearch] = useState('');
     const [citiesResult, setCitiesResult] = useState<City[]>([]);
     const [citySelected, setCitySelected] = useState<Partial<City>>({});
 
-    // Postal Code
+    // Code postal lié à la ville sélectionnée (auto-rempli)
     const [postalCode, setPostalCode] = useState('');
 
-    // Address Autocomplete
+    // Autocomplétion adresse
     const [addressSearch, setAddressSearch] = useState('');
     const [addressResult, setAddressResult] = useState<AddressFeature[]>([]);
     const [addressSelected, setAddressSelected] = useState(false);
@@ -45,8 +45,9 @@ const Checkout = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
-    // Fetch Cities
+    // Récupère les communes via l'API gouvernementale (limitée et boostée par population)
     const fetchCities = async () => {
+        // Ne pas appeler si la recherche est vide ou si l'utilisateur a déjà sélectionné la même ville
         if (!citySearch || citySelected.nom === citySearch) {
             setCitiesResult([]);
             return;
@@ -66,6 +67,7 @@ const Checkout = () => {
         }
     };
 
+    // Debounce pour éviter d'appeler l'API à chaque frappe
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             fetchCities();
@@ -74,6 +76,7 @@ const Checkout = () => {
         return () => clearTimeout(delayDebounceFn);
     }, [citySearch]);
 
+    // Lors de la sélection d'une ville, mettre à jour l'état et pré-remplir le code postal
     const handleSelectCity = (city: City) => {
         setCitySelected(city);
         setCitySearch(city.nom);
@@ -81,9 +84,10 @@ const Checkout = () => {
         setCitiesResult([]);
     };
 
-    // Fetch Addresses
+    // Récupère les adresses via l'API d'adresses (autocomplétion)
     const fetchAddresses = async () => {
-        if (!addressSearch || addressSelected) {
+      // Si la recherche est vide ou si une adresse a déjà été sélectionnée, rien à faire
+      if (!addressSearch || addressSelected) {
             setAddressResult([]);
             return;
         }
@@ -100,6 +104,7 @@ const Checkout = () => {
         }
     };
 
+    // Debounce pour l'autocomplétion d'adresse
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             fetchAddresses();
@@ -108,6 +113,7 @@ const Checkout = () => {
         return () => clearTimeout(delayDebounceFn);
     }, [addressSearch]);
 
+    // Remplit le champ adresse et, si la ville n'est pas choisie, pré-remplit la ville et le code postal
     const handleSelectAddress = (feature: AddressFeature) => {
         setAddressSearch(feature.properties.label);
         setAddressSelected(true);
@@ -120,14 +126,17 @@ const Checkout = () => {
     };
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Si l'utilisateur modifie le texte, on désactive le flag "sélectionné"
         setAddressSearch(e.target.value);
         setAddressSelected(false);
     };
 
+    // Validation et enregistrement de la commande
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (products.length === 0) {
+      // Vérifier que le panier n'est pas vide
+      if (products.length === 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Cart is empty',
@@ -139,7 +148,8 @@ const Checkout = () => {
 
         setIsSubmitting(true);
 
-        const order = {
+      // Construire l'objet commande qui sera sauvegardé localement
+      const order = {
             id: uuidv4(),
             customer: {
                 firstName,
@@ -157,7 +167,8 @@ const Checkout = () => {
         try {
             saveOrder(order);
 
-            await Swal.fire({
+          // Retour visuel à l'utilisateur avant redirection
+          await Swal.fire({
                 icon: 'success',
                 title: 'Order placed successfully!',
                 text: `Thank you, ${firstName} ${lastName}. Redirecting to home...`,
@@ -168,6 +179,7 @@ const Checkout = () => {
                 position: 'top-end'
             });
 
+            // Nettoyer le panier et rediriger
             clearCart();
             navigate('/');
         } catch (error) {
@@ -216,6 +228,7 @@ const Checkout = () => {
                         />
                     </S.FormGroup>
 
+                      {/* Autocomplétion ville */}
                     <S.Row>
                         <S.FormGroup>
                             <S.Label>City</S.Label>
@@ -256,6 +269,7 @@ const Checkout = () => {
                         </S.FormGroup>
                     </S.Row>
 
+                  {/* Autocomplétion adresse */}
                     <S.FormGroup>
                         <S.Label>Address</S.Label>
                         <S.RelativeWrapper>
@@ -284,6 +298,7 @@ const Checkout = () => {
                 </form>
             </S.FormColumn>
 
+          {/* Résumé de la commande */}
             <S.SummaryColumn>
                 <S.Title>Order Summary</S.Title>
                 {products.map((p) => (
