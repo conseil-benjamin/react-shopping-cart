@@ -5,15 +5,18 @@ import formatPrice from 'utils/formatPrice';
 import Swal from 'sweetalert2';
 import * as S from './style';
 
+// Composant d'administration affichant les commandes stockées localement
 const Admin = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
+  // Au montage, on récupére les commandes une seule fois
+  useEffect(() => {
         fetchOrders();
     }, []);
 
-    const fetchOrders = () => {
+  // Récupère les commandes depuis le service API
+  const fetchOrders = () => {
         setIsLoading(true);
         try {
             const localOrders = getOrders();
@@ -25,7 +28,8 @@ const Admin = () => {
         }
     };
 
-    const handleDeleteOrder = async (id: string) => {
+  // Supprime une commande après confirmation utilisateur via SweetAlert
+  const handleDeleteOrder = async (id: string) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -38,8 +42,10 @@ const Admin = () => {
 
         if (result.isConfirmed) {
             try {
-                deleteOrder(id);
-                setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+              // Appel au service pour supprimer effectivement la commande
+              deleteOrder(id);
+              // Mise à jour locale de l'état pour retirer la commande sans recharger
+              setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
                 Swal.fire(
                     'Deleted!',
                     'Order has been deleted.',
@@ -61,7 +67,8 @@ const Admin = () => {
             <S.Title>Admin Page</S.Title>
             <S.Content>
                 {isLoading ? (
-                    <Loader />
+                  // Affiche un loader pendant la récupération des données
+                  <Loader />
                 ) : (
                     <S.Table>
                         <thead>
@@ -81,13 +88,16 @@ const Admin = () => {
                                     <S.Td colSpan={7} style={{ textAlign: 'center' }}>No orders found.</S.Td>
                                 </tr>
                             ) : (
-                                orders.map((order) => (
+                              // Affiche chaque commande dans une ligne de tableau
+                              orders.map((order) => (
                                     <S.Tr key={order.id}>
                                         <S.Td>{new Date(order.date).toLocaleDateString()} {new Date(order.date).toLocaleTimeString()}</S.Td>
                                         <S.Td>{order.customer.firstName} {order.customer.lastName}</S.Td>
                                         <S.Td>{order.customer.email}</S.Td>
                                         <S.Td>{order.customer.city} ({order.customer.postalCode})</S.Td>
+                                        {/* Calcul du nombre total d'articles dans la commande */}
                                         <S.Td>{order.products.reduce((acc, p) => acc + p.quantity, 0)} items</S.Td>
+                                        {/* formatPrice gère l'affichage monétaire */}
                                         <S.Td>${formatPrice(order.total, 'USD')}</S.Td>
                                         <S.Td>
                                             <S.DeleteButton onClick={() => handleDeleteOrder(order.id)}>
