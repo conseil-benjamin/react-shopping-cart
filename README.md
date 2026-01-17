@@ -62,13 +62,22 @@ The MIT License (MIT). Please see License File for more information.
 <sub>A little project by <a href="http://www.jeffersonribeiro.com/">Jefferson Ribeiro</a></sub>
 </p>
 
-API :
+## Rapport de Contribution - Benjamin
 
-- Utilisation de fakestoreapi.com
+Dans le cadre de ce projet universitaire, mon rôle a été de développer les fonctionnalités liées à la finalisation de commande et à l'administration, en ajoutant des fonctionnalités avancées sur une base existante.
 
-Pages :
+### 1. Page Checkout (Commande)
 
-- Page détail d'un produit (/ product /: id) avec possibilité d'ajouter au panier. (Antoine)
-- Page commander (/ checkout) avec formulaire de commande et résumé du panier. (Avec autocomplétion des adresses via l'API Google Places) (Benjamin)
-- Page admin (Benjamin)
-- Filtre et barre de recherche sur la page d'accueil. (Antoine)
+J'ai conçu et implémenté la page de checkout qui permet à l'utilisateur de valider son panier.
+
+- **Résumé de commande** : Affichage clair des articles, du total et des options.
+- **Autocomplétion d'adresse** : Intégration de l'**API Adresse du gouvernement (api-adresse.data.gouv.fr)** pour faciliter la saisie de l'adresse de livraison (autocomplétion de la ville et de l'adresse).
+- **Persistance des données** : Contraint par l'absence de backend, j'ai mis en place un système de stockage des commandes via le **LocalStorage** du navigateur, simulant ainsi un enregistrement en base de données.
+
+### 2. Page Admin
+
+J'ai créé une interface d'administration pour visualiser les commandes passées.
+
+- **Récupération des commandes** : Lecture des données stockées dans le LocalStorage pour afficher l'historique des commandes.
+- **Gestion** : Visualisation des détails de chaque commande (client, produits, total).
+- **Suppression** : Option de suppression des commandes pour nettoyer l'historique.
